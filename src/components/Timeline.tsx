@@ -12,14 +12,14 @@ const Timeline: React.FC = () => {
     },
     {
       icon: Calendar,
-      date: '3nd July 2025',
+      date: '3rd July 2025',
       title: 'Submission Deadline',
       description: 'Register for the competition through our registration form',
       status: 'current'
     },
     {
       icon: Clock,
-      date: '4rd July 2025, 12:00PM to 1:30PM',
+      date: '4th July 2025, 12:00PM to 1:30PM',
       title: 'Official Competition Start',
       description: 'Official Competition Date and Time',
       status: 'upcoming'
