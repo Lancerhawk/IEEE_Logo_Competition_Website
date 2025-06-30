@@ -4,15 +4,7 @@ import { Menu, X } from 'lucide-react';
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const [activeLink, setActiveLink] = useState('');
 
   const navItems = [
     { href: '#about', label: 'About' },
@@ -21,6 +13,34 @@ const Header: React.FC = () => {
     { href: '#prizes', label: 'Prizes' },
     { href: '#register', label: 'Register' },
   ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+
+      const sections = navItems.map(item => document.querySelector(item.href) as HTMLElement);
+      let currentSection = '';
+
+      sections.forEach(section => {
+        if (section) {
+          const sectionTop = section.offsetTop - 100;
+          const sectionHeight = section.clientHeight;
+          if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+            currentSection = `#${section.id}`;
+          }
+        }
+      });
+
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+        currentSection = '#register';
+      }
+
+      setActiveLink(currentSection);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [navItems]);
 
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
@@ -33,7 +53,11 @@ const Header: React.FC = () => {
 
           <nav className="nav-desktop">
             {navItems.map((item) => (
-              <a key={item.href} href={item.href} className="nav-link">
+              <a 
+                key={item.href} 
+                href={item.href} 
+                className={`nav-link ${activeLink === item.href ? 'active' : ''}`}
+              >
                 {item.label}
               </a>
             ))}
@@ -54,7 +78,7 @@ const Header: React.FC = () => {
               <a
                 key={item.href}
                 href={item.href}
-                className="nav-link-mobile"
+                className={`nav-link-mobile ${activeLink === item.href ? 'active' : ''}`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.label}
